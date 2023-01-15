@@ -3,7 +3,7 @@ WORKDIR /app
 
 LABEL com.skoobasteeve.mtapi-docker.version="main"
 
-ADD tmp/MTAPI .
+ADD MTAPI .
 COPY data/stations.json data/
 COPY data/stations.csv data/
 
