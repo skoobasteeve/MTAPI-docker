@@ -21,7 +21,7 @@ jobs:
       - name: Check out MTAPI repo
         uses: actions/checkout@v3
         with:
-          repository: https://github.com/jonthornton/MTAPI.git
+          repository: jonthornton/MTAPI
           path: MTAPI
       
       - name: Log in to Docker Hub
