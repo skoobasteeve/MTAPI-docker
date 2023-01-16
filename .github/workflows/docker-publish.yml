@@ -21,12 +21,22 @@ jobs:
           REPOSITORY: jonthornton/MTAPI
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - run: echo $REPOSITORY_UPDATED_AT
+          
+      - name: Echo last push date for MTAPI repo    
+        run: echo $REPOSITORY_PUSHED_AT
         env:
-          REPOSITORY_UPDATED_AT: ${{ env.REPOSITORY_UPDATED_AT }}
+          REPOSITORY_PUSHED_AT: ${{ env.REPOSITORY_PUSHED_AT }}
+          
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +%s)" >> $GITHUB_ENV
       
-#       - name: Check out the repo
-#         uses: actions/checkout@v3
+      - name: Calculate time difference between now and last push to MTAPI repo
+        run: echo "SEC_SINCE_UPDATE=$((NOW - $(date --date $REPOSITORY_PUSHED_AT +%s)))" >> $GITHUB_ENV
+        
+      
+      - name: Check out the repo
+        if: ${{ env.SEC_SINCE_UPDATE }} > 5184000
+        uses: actions/checkout@v3
       
 #       - name: Check out MTAPI repo
 #         uses: actions/checkout@v3
