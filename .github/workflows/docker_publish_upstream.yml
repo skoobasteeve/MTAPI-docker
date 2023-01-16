@@ -1,0 +1,68 @@
+
+name: Create and publish a Docker image - Upstream changes
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+
+env:
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get metadata from MTAPI repo
+        uses: varunsridharan/action-repository-meta@main
+        with:
+          REPOSITORY: jonthornton/MTAPI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Echo last push date for MTAPI repo    
+        run: echo $REPOSITORY_PUSHED_AT
+        env:
+          REPOSITORY_PUSHED_AT: ${{ env.REPOSITORY_PUSHED_AT }}
+          
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +%s)" >> $GITHUB_ENV
+      
+      - name: Calculate time difference between now and last push to MTAPI repo
+        run: echo "SEC_SINCE_UPDATE=$((NOW - $(date --date $REPOSITORY_PUSHED_AT +%s)))" >> $GITHUB_ENV
+        
+        # All remaining steps will be skipped if the upstream repo hasn't pushed changes in the last 24h
+      
+      - name: Check out the repo
+        if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
+        uses: actions/checkout@v3
+      
+      - name: Check out MTAPI repo
+        if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
+        uses: actions/checkout@v3
+        with:
+          repository: jonthornton/MTAPI
+          path: MTAPI
+      
+      - name: Log in to Docker Hub
+        if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      
+      - name: Extract metadata (tags, labels) for Docker
+        if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
+        id: meta
+        uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+        with:
+          images: ${{ env.IMAGE_NAME }}
+      
+      - name: Build and push Docker image
+        if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
