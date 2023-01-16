@@ -32,7 +32,9 @@ jobs:
       
       - name: Calculate time difference between now and last push to MTAPI repo
         run: echo "SEC_SINCE_UPDATE=$((NOW - $(date --date $REPOSITORY_PUSHED_AT +%s)))" >> $GITHUB_ENV
-        
+      
+      - name: Check variables
+        run: echo $NOW && echo $SEC_SINCE_UPDATE
       
       - name: Check out the repo
         if: ${{ env.SEC_SINCE_UPDATE }} > 5184000
