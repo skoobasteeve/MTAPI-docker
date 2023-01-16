@@ -6,6 +6,8 @@ on:
     branches: ['main']
     paths-ignore:
       - '**/README.md'
+  schedule:
+    - cron: '*/3 * * * *'
 
 env:
   IMAGE_NAME: ${{ github.repository }}
@@ -40,11 +42,12 @@ jobs:
         if: ${{ env.SEC_SINCE_UPDATE > 5184000 }}
         uses: actions/checkout@v3
       
-#       - name: Check out MTAPI repo
-#         uses: actions/checkout@v3
-#         with:
-#           repository: jonthornton/MTAPI
-#           path: MTAPI
+      - name: Check out MTAPI repo
+        if: github.event.schedule
+        uses: actions/checkout@v3
+        with:
+          repository: jonthornton/MTAPI
+          path: MTAPI
       
 #       - name: Log in to Docker Hub
 #         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
