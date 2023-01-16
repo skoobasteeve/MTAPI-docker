@@ -43,7 +43,7 @@ jobs:
         uses: actions/checkout@v3
       
       - name: Check out MTAPI repo
-        if: github.event_name == 'schedule' && ${{ env.SEC_SINCE_UPDATE > 5184000 }}
+        if: ${{ github.event_name == 'schedule' && env.SEC_SINCE_UPDATE > 5184000 }}
         uses: actions/checkout@v3
         with:
           repository: jonthornton/MTAPI
