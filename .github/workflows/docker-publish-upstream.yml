@@ -37,13 +37,6 @@ jobs:
         if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
         uses: actions/checkout@v3
       
-      - name: Check out MTAPI repo
-        if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
-        uses: actions/checkout@v3
-        with:
-          repository: jonthornton/MTAPI
-          path: MTAPI
-      
       - name: Log in to Docker Hub
         if: ${{ env.SEC_SINCE_UPDATE < 86400 }}
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9

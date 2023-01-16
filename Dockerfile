@@ -3,7 +3,9 @@ WORKDIR /app
 
 LABEL com.skoobasteeve.mtapi-docker.version="main"
 
-ADD MTAPI .
+RUN apk add --no-cache git
+RUN git clone https://github.com/jonthornton/MTAPI.git /app
+
 COPY data/stations.json data/
 COPY data/stations.csv data/
 
