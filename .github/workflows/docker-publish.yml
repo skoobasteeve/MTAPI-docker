@@ -37,7 +37,7 @@ jobs:
         run: echo $NOW && echo $SEC_SINCE_UPDATE
       
       - name: Check out the repo
-        if: ${{ env.SEC_SINCE_UPDATE }} > 5184000
+        if: ${{ env.SEC_SINCE_UPDATE > 5184000 }}
         uses: actions/checkout@v3
       
 #       - name: Check out MTAPI repo
