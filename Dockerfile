@@ -11,5 +11,5 @@ COPY data/stations.csv data/
 
 RUN pip install -r requirements.txt
 
-CMD [ "python", "app.py" ]
+CMD [ "flask", "run", "--host=0.0.0.0" ]
 EXPOSE 5000
