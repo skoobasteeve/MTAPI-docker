@@ -19,6 +19,8 @@ jobs:
         uses: varunsridharan/action-repository-meta@main
         with:
           REPOSITORY: jonthornton/MTAPI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - run: echo $REPOSITORY_UPDATED_AT
         env:
           REPOSITORY_UPDATED_AT: ${{ env.REPOSITORY_UPDATED_AT }}
